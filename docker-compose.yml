@@ -1,0 +1,41 @@
+version: "3"
+services:
+    web:
+      build:
+        context: .
+        dockerfile: Dockerfile.fluig
+      ports:
+        - "5000:80"
+        - "5443:443"
+      depends_on:
+        - db
+        - realtime
+        - solr
+    db:
+      image: mysql:5.7
+      ports:
+        - "3306:3306"
+      volumes:
+        - mysql-data:/var/lib/mysql
+        - ./mysqld.cnf:/etc/mysql/mysql.conf.d/mysqld.cnf
+      environment:
+        MYSQL_ROOT_PASSWORD: "root"
+        MYSQL_ROOT_HOST: "%"
+        MYSQL_DATABASE: "fluig"
+    realtime:
+      build:
+        context: .
+        dockerfile: Dockerfile.realtime
+      ports:
+        - "7777:7777"
+        - "8888:8888"
+        - "8000:8000"
+    solr:
+      build:
+        context: .
+        dockerfile: Dockerfile.solr
+      ports:
+        - "8983:8983"
+volumes:
+    mysql-data:
+        driver: local

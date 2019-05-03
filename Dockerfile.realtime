@@ -1,0 +1,14 @@
+FROM node:latest
+
+COPY ./fluig-installer /fluig
+
+WORKDIR /fluig
+
+RUN sed -i "s/install.node=false/install.node=true/" /fluig/install.conf && \
+    ./jdk-64/bin/java -cp fluig-installer.jar com.fluig.install.ExecuteInstall nodejs
+
+EXPOSE 7777
+EXPOSE 8888
+EXPOSE 8000
+
+CMD ["/opt/fluig/node/bin/node", "ws_server.js"]

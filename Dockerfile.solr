@@ -1,0 +1,14 @@
+FROM centos:7.5.1804
+
+COPY ./fluig-installer /fluig
+
+WORKDIR /fluig
+
+RUN yum update -y && \
+    yum install -y unzip && \
+    sed -i "s/install.solr=false/install.solr=true/" /fluig/install.conf && \
+    ./jdk-64/bin/java -cp fluig-installer.jar com.fluig.install.ExecuteInstall solr
+
+EXPOSE 8983
+
+CMD ["/etc/init.d/fluig_Indexer", "start"]
